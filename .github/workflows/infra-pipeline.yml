@@ -1,0 +1,49 @@
+name: Terraform Security and CI
+
+on:
+  push:
+    branches: development
+  pull_request:
+    branches: development
+
+jobs:
+  terraform-code-scan:
+    runs-on: ubuntu-latest
+    name: Terraform Code Quality and Security
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Setup tflint
+        uses: terraform-linters/setup-tflint@v1
+        with:
+          tflint_version: v0.50.3
+
+      - name: Run tflint
+        run: tflint --init && tflint
+
+      - name: Run tfsec (security scan)
+        uses: aquasecurity/tfsec-action@v1.0.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Upload Terraform Files as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-code
+          path: |
+            *.tf
+            *.tfvars
