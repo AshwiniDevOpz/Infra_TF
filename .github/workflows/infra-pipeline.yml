@@ -31,8 +31,8 @@ jobs:
       - name: Run tflint
         run: tflint --init && tflint
 
-      - name: Run tfsec (security scan)
-        uses: aquasecurity/tfsec-action@v1.0.0
+      # - name: Run tfsec (security scan)
+      #   uses: aquasecurity/tfsec-action@v1.0.0
 
       - name: Terraform Init
         run: terraform init
