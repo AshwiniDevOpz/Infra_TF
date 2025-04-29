@@ -47,3 +47,8 @@ jobs:
           path: |
             *.tf
             *.tfvars
+            
+      - name: Show downloaded files
+        run: |
+            ls -R    
+            pwd
