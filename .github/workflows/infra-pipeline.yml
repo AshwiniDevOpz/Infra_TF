@@ -1,4 +1,4 @@
-name: Terraform Security and CI
+name: Terraform Security and CIs
 
 on:
   push:
