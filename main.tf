@@ -1,4 +1,4 @@
-# S3 Bucket Definition
+# Create the S3 bucket
 resource "aws_s3_bucket" "example" {
   bucket        = var.bucket_name
   force_destroy = true
@@ -18,7 +18,7 @@ resource "aws_s3_bucket" "example" {
   }
 }
 
-# Block Public Access Settings (separate resource)
+# Block public access settings
 resource "aws_s3_bucket_public_access_block" "example_block" {
   bucket                  = aws_s3_bucket.example.id
   block_public_acls       = true
@@ -27,28 +27,20 @@ resource "aws_s3_bucket_public_access_block" "example_block" {
   restrict_public_buckets = true
 }
 
-# Server-Side Encryption (Option 1: SSE-S3)
-resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
-  bucket = aws_s3_bucket.example.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256" # or use aws_kms_key for KMS
-    }
-  }
-}
-
+# KMS Key for encryption
 resource "aws_kms_key" "s3_key" {
   description             = "KMS key for S3 bucket encryption"
   deletion_window_in_days = 7
   enable_key_rotation     = true
 }
 
+# Alias for the KMS key
 resource "aws_kms_alias" "s3_key_alias" {
   name          = "alias/${var.bucket_name}-kms"
   target_key_id = aws_kms_key.s3_key.key_id
 }
 
+# S3 Bucket Server-Side Encryption using Customer Managed Key
 resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
   bucket = aws_s3_bucket.example.id
 
