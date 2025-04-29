@@ -11,12 +11,12 @@ variable "aws_region" {
 }
 
 variable "logging_bucket_name" {
-  type = string
+  type        = string
   description = "The bucket where logs will be stored"
-  default = "new"
+  default     = "new"
 }
 
 variable "environment" {
-  type = string
+  type    = string
   default = "dev"
 }

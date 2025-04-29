@@ -8,7 +8,7 @@ resource "aws_s3_bucket" "example" {
   }
 
   logging {
-    target_bucket = var.logging_bucket_name   # Must be created before
+    target_bucket = var.logging_bucket_name # Must be created before
     target_prefix = "${var.bucket_name}/logs/"
   }
 
