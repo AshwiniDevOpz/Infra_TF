@@ -97,6 +97,7 @@ jobs:
             echo "no_change=true" >> $GITHUB_OUTPUT
           else
             echo "no_change=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Skip if no changes
         if: steps.hash-diff.outputs.no_change == 'true'
