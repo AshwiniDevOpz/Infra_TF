@@ -75,9 +75,10 @@ jobs:
 
       - name: Zip the artifact
         run: |
+          mkdir -p repo/Artefact_Storage
           cd terraform-code
           zip -r terraform-code.zip .
-          mv terraform-code.zip ../Artefact_Storage /
+          mv terraform-code.zip ../repo/Artefact_Storage/
 
       - name: Commit and push ZIP to repo
         run: |
