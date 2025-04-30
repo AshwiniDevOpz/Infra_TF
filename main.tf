@@ -1,4 +1,4 @@
-# Create the S3 bucket
+# Create the S3 buckets
 resource "aws_s3_bucket" "example" {
   bucket        = var.bucket_name
   force_destroy = true
