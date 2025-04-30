@@ -53,19 +53,19 @@ jobs:
             ls -R    
             pwd
 
-  push-artifact-to-repo:
+  zip-and-push-artifact:
     needs: terraform-code-scan
     runs-on: ubuntu-latest
-    if: success()  # Only run if previous job was successful
+    if: success()  # Run only if previous job succeeds
 
     steps:
-      - name: Checkout target repository
+      - name: Checkout target repo
         uses: actions/checkout@v3
         with:
-          repository: AshwiniDevOpz/Artefact_Storage # or current repo if pushing to another branch
-          ref: main  # Or another target branch
-          token: ${{ secrets.My_GITHUB_TOKEN }}  # Or a personal access token if needed
-          path: Artefact_Storage/
+          repository: AshwiniDevOpz/Artefact_Storage   # replace with actual repo
+          ref: development                              # replace with actual branch
+          token: ${{ secrets.My_GITHUB_TOKEN }}      # or use a PAT if cross-repo
+          path: Artefact_Storage 
 
       - name: Download Terraform artifact
         uses: actions/download-artifact@v4
@@ -73,15 +73,18 @@ jobs:
           name: terraform-code
           path: terraform-code
 
-      - name: Copy files to repo
+      - name: Zip the artifact
         run: |
-          cp -r terraform-code/* Artefact_Storage//
+          cd terraform-code
+          zip -r terraform-code.zip .
+          mv terraform-code.zip ../Artefact_Storage /
 
-      - name: Commit and push changes
+      - name: Commit and push ZIP to repo
         run: |
-          cd Artefact_Storage/
+          cd Artefact_Storage 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Add Terraform code from artifact"
+          git add terraform-code.zip
+          git commit -m "Add zipped Terraform code"
           git push
+
