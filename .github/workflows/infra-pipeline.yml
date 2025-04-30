@@ -78,12 +78,12 @@ jobs:
           mkdir -p repo/Artefact_Storage
           cd terraform-code
           zip -r terraform-code.zip .
-          mv terraform-code.zip ../repo/Artefact_Storage/
+          mv terraform-code.zip ../Artefact_Storage/
 
 
       - name: Commit and push ZIP to development branch
         run: |
-          cd repo
+          cd Artefact_Storage
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add Artefact_Storage/terraform-code.zip
