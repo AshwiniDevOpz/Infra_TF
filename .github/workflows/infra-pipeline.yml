@@ -64,7 +64,7 @@ jobs:
         with:
           repository: AshwiniDevOpz/Artefact_Storage # or current repo if pushing to another branch
           ref: main  # Or another target branch
-          token: ${{ secrets.GITHUB_TOKEN }}  # Or a personal access token if needed
+          token: ${{ secrets.My_GITHUB_TOKEN }}  # Or a personal access token if needed
           path: Artefact_Storage/
 
       - name: Download Terraform artifact
