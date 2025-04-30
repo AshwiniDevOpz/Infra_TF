@@ -86,7 +86,8 @@ jobs:
           cd Artefact_Storage
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Artefact_Storage/terraform-code.zip
+          git add terraform-code.zip
           git commit -m "Add zipped Terraform code"
           git push origin development
+
 
