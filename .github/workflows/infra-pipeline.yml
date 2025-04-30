@@ -67,29 +67,58 @@ jobs:
           token: ${{ secrets.My_GITHUB_TOKEN }}
           path: Artefact_Storage
 
+      - name: Check for existing latest version hash
+        id: skip-check
+        run: |
+          cd Artefact_Storage
+          latest_file=$(ls terraform-code-v*.zip 2>/dev/null | sort -V | tail -n 1)
+          if [[ -f "$latest_file" ]]; then
+            unzip -p "$latest_file" | sha256sum | cut -d' ' -f1 > ../latest_hash.txt
+          else
+            echo "no_previous_hash" > ../latest_hash.txt
+          fi
+
       - name: Download Terraform artifact
         uses: actions/download-artifact@v4
         with:
           name: terraform-code
           path: terraform-code
 
+      - name: Generate current artifact hash
+        run: |
+          cd terraform-code
+          zip -r terraform-temp.zip .
+          unzip -p terraform-temp.zip | sha256sum | cut -d' ' -f1 > ../current_hash.txt
+
+      - name: Check for changes
+        id: hash-diff
+        run: |
+          if cmp -s latest_hash.txt current_hash.txt; then
+            echo "no_change=true" >> $GITHUB_OUTPUT
+          else
+            echo "no_change=false" >> $GITHUB_OUTPUT
+
+      - name: Skip if no changes
+        if: steps.hash-diff.outputs.no_change == 'true'
+        run: echo "No changes in Terraform code — skipping commit and push."
+
       - name: Determine next version
+        if: steps.hash-diff.outputs.no_change == 'false'
         id: version
         run: |
           cd Artefact_Storage
-          # Count current versioned zips
           count=$(ls terraform-code-v*.zip 2>/dev/null | wc -l)
           next_version=$((count + 1))
           echo "version=v$next_version" >> $GITHUB_OUTPUT
 
-      - name: Zip the artifact with version
+      - name: Rename and move artifact
+        if: steps.hash-diff.outputs.no_change == 'false'
         run: |
           VERSION=${{ steps.version.outputs.version }}
-          cd terraform-code
-          zip -r terraform-code-${VERSION}.zip .
-          mv terraform-code-${VERSION}.zip ../Artefact_Storage/
+          mv terraform-code/terraform-temp.zip Artefact_Storage/terraform-code-${VERSION}.zip
 
       - name: Commit and push ZIP to development branch
+        if: steps.hash-diff.outputs.no_change == 'false'
         run: |
           cd Artefact_Storage
           git config user.name "github-actions[bot]"
@@ -97,3 +126,4 @@ jobs:
           git add terraform-code-*.zip
           git commit -m "Add Terraform ZIP version ${{ steps.version.outputs.version }}"
           git push origin development
+
