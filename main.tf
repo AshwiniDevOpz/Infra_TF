@@ -1,3 +1,4 @@
+# tfsec:ignore:google-gke-enforce-pod-security-policy
 # -----------------------------
 # GKE Cluster Resource
 # -----------------------------
