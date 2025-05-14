@@ -55,9 +55,9 @@ resource "google_container_cluster" "primary" {
   }
 
   # ✅ Enable Pod Security Policy (legacy setting for some older clusters)
-  #  pod_security_policy_config {
-  #    enabled = true
-  #  }
+    pod_security_policy_config {
+      enabled = true
+    }
 }
 
 # -----------------------------
