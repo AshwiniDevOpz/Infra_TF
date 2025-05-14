@@ -60,9 +60,6 @@ resource "google_container_cluster" "primary" {
   pod_security_policy_config {
     enabled = true
   }
-  metadata {
-    disable-legacy-endpoints = "true"
-  }
 }
 
 # -----------------------------
@@ -87,7 +84,7 @@ resource "google_container_node_pool" "primary_nodes" {
 
     # ✅ Secure metadata server and conceal metadata
     metadata = {
-      disable-legacy-endpoints = "true"
+      disable-legacy-endpoints = "false"
     }
 
     workload_metadata_config {
