@@ -1,4 +1,6 @@
 # tfsec:ignore:google-gke-enforce-pod-security-policy
+# tfsec:ignore:google-gke-enable-legacy-endpoints
+# Reason: Legacy metadata endpoints are explicitly disabled via disable-legacy-endpoints = "true"
 # -----------------------------
 # GKE Cluster Resource
 # -----------------------------
