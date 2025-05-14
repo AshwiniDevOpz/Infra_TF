@@ -1,3 +1,6 @@
+# -----------------------------
+# Variables
+# -----------------------------
 variable "project_id" {
   type        = string
   description = "The GCP project ID"
@@ -27,4 +30,9 @@ variable "network" {
 variable "subnetwork" {
   type    = string
   default = "default"
+}
+
+variable "gke_service_account" {
+  type    = string
+  default = "" # Provide a secure SA with minimal GKE access
 }

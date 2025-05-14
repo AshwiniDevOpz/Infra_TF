@@ -1,29 +1,6 @@
-# ✅ GKE Service Account
-resource "google_service_account" "gke_sa" {
-  account_id   = "gke-node-sa"
-  display_name = "GKE Node Service Account"
-}
-
-# ✅ IAM Bindings for GKE Node Service Account
-resource "google_project_iam_member" "gke_sa_logging" {
-  project = var.project_id
-  role    = "roles/logging.logWriter"
-  member  = "serviceAccount:${google_service_account.gke_sa.email}"
-}
-
-resource "google_project_iam_member" "gke_sa_monitoring" {
-  project = var.project_id
-  role    = "roles/monitoring.metricWriter"
-  member  = "serviceAccount:${google_service_account.gke_sa.email}"
-}
-
-resource "google_project_iam_member" "gke_sa_viewer" {
-  project = var.project_id
-  role    = "roles/viewer"
-  member  = "serviceAccount:${google_service_account.gke_sa.email}"
-}
-
-# ✅ GKE Cluster (Updated)
+# -----------------------------
+# GKE Cluster Resource
+# -----------------------------
 resource "google_container_cluster" "primary" {
   name     = var.cluster_name
   location = var.zone
@@ -34,7 +11,7 @@ resource "google_container_cluster" "primary" {
   network    = var.network
   subnetwork = var.subnetwork
 
-  # ✅ Master authorized networks
+  # ✅ Enable master authorized networks
   master_authorized_networks_config {
     cidr_blocks {
       cidr_block   = "192.168.100.0/24"
@@ -42,30 +19,43 @@ resource "google_container_cluster" "primary" {
     }
   }
 
-  # ✅ Network policy
+  # ✅ Enable network policy
   network_policy {
     enabled  = true
     provider = "CALICO"
   }
 
-  # ✅ Private cluster
+  # ✅ Enable private cluster
   private_cluster_config {
     enable_private_nodes    = true
     enable_private_endpoint = false
     master_ipv4_cidr_block  = "172.16.0.0/28"
   }
 
-  # ✅ IP aliasing (correct nesting)
-  ip_allocation_policy {}
+  # ✅ Enable IP aliasing
+  ip_allocation_policy {
+    cluster_secondary_range_name  = "pods"
+    services_secondary_range_name = "services"
+  }
 
-  # ✅ Labels
+  # ✅ Use labels
   resource_labels = {
     environment = "prod"
     owner       = "devops"
   }
+
+  # ✅ Enable Shielded Nodes
+  enable_shielded_nodes = true
+
+  # ✅ Enable Workload Identity
+  workload_identity_config {
+    workload_pool = "${var.project_id}.svc.id.goog"
+  }
 }
 
-# ✅ Node pool
+# -----------------------------
+# Node Pool Resource
+# -----------------------------
 resource "google_container_node_pool" "primary_nodes" {
   name     = "primary-node-pool"
   location = var.zone
@@ -74,20 +64,22 @@ resource "google_container_node_pool" "primary_nodes" {
   node_config {
     machine_type = "e2-medium"
 
+    # ✅ Use recommended COS containerd image
+    image_type = "COS_CONTAINERD"
+
+    # ✅ Minimal OAuth scopes
     oauth_scopes = [
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring.write"
     ]
 
+    # ✅ Secure metadata server
     metadata = {
       disable-legacy-endpoints = "true"
     }
 
-    workload_metadata_config {
-      mode = "GKE_METADATA"
-    }
-
-    service_account = google_service_account.gke_sa.email
+    # ✅ Use least-privilege service account
+    service_account = var.gke_service_account
   }
 
   management {
