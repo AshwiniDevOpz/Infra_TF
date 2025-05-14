@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "digidense-learning-platform",
+  "private_key_id": "42da4738fab1ffc1d744c81797f3fa9cdcde27a1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC9HRtZhajsP0Fp\nlfkwXEWsc9yfRgzYgugheJ0IZPGmU4CCTRwZhzpSgqZtz7ys5ns5v0bWuV0+dpax\nVVsoBRcOjJVc9WgXj+HYdS+ZZOmcaUR881WWzdTpO3ksNqArVoKlzAV8x0cbxyak\neAndUM8VwH/JdKWLGTsrLJm3d/gt0WwxA2O9E8FBtrdiszBOKdwpPd3b31nxwE3n\no16hj0e5Z3u7Kyk7UQAZ34D6QNHw0MUFROAybR88J5ChBFLbGQ1BoIbkXTxrtrE7\njbfuUZV/KbXKP6SP6L1K0lkEv6NQypmBXrMXJsIBdF9ONslKOCzI/CRbgWEjpBXz\nNHWCb6jbAgMBAAECggEAUaOzHt54oiRclLxNqvbqjRwnbgrLmNxKYciz4d/SAj+i\nBp5LNyoNn3kPZ/B6PxnwsGlGp4O2ITUIsN1sUMaBwaInCM5YdXODx/Iu7kWGJCO9\nkUNq+4M4Gse188RROORL2k9NPyS4KeG7aNz5RTWRcI59m/ZjUL0/sc+7PFzqIry7\nmxlbUEUyPaWqZoZOIDuknFouRP8tiMB29e+xR8z/BKyNe+YbBYHLgcXz01sloyEl\n4X4oW3yS2UI+KxtKVuXqV/wUU6Az04bwndJRBiOSAg2NP2JTzxfPoI9Yibd5aAmD\nf5k43L/fG6EUL5METXy57EHEfR1aGCG/CPcEFlpWIQKBgQDlFbpO7RKjU7ocpgf/\nSZgtQp+Wk0I+wr6fOkM3WpPZJ7oZgY/5d+yWk1jvieIcHNYeS/RlPgwB699ENuZ1\nB6fcw0DKDGH5twmyCCwKhKpLZrLMDZi2MEbJ4PqQlVFbKqJ1nC6Am1t0NwZlYWJC\nUCOYrbfE2q1kSoiRiAX0Gm+lLQKBgQDTVSajlUHF2A3VFHgLIs+tBNCjAbJUQxzC\nDjTooU09sSuAC3ZsWwBc5c+qXWCem2s92JXrd4Bv9s0QLO+GbxLt1+Vc7quaQu3k\nMW/NsZDGhAl4AclSnjcna7v53dvGy9OPIMHNKKZjJlMMtDGeiNs3Z6Og/P4ycBw2\nZWiD0aDbJwKBgFNnGbFqdoKoFPYhLIAxFwpDWz7C1jdrR2NJHvekLne9Eu/+T6CP\nnL8lXhe3p258wSe+l3fUoyJ/8YUwR68L3n1tSMVGxNTZYtpCR2Z87lMNTMMloBeU\nc/FDy3WgJ0J9vy/6cKO57A3fiqCWV+O0sYEAngs5Yi9FQ3tYfnJkvYjxAoGBAL0m\nf7j2hLIx2N+YvIErHTo9Dwh3Ikfs8bZ2xMBabyoCg27N06bUJJUBVEel4C7V6Lyo\nODdS9HBCM/SAY7qtfAHJtQ7iyFEACrCt1uYCQhSMZXU2FB2QYskz0kGoY2ehU6/N\nn+iis5oW2UqLlcXRtHP4nSoghtxaH8ZIKa2iWRkNAoGAM+4ynSo2lxQv6/5Qozfx\nJ7EjmpfJxAYfrrw8vzVvXheoCdu1X6crGTvI4Z4i+8tY2HHc7dSAhv+Xf7R5PYcX\nUIHWON8YTe+RpKzWMyZuO8EmfDSobH4HumJImGGA3Q/LGr6AvD2Pvti00ExxwExG\nkqFMYEE/Zjwfo0EaUyH2mQc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "digidense-access@digidense-learning-platform.iam.gserviceaccount.com",
+  "client_id": "107865604300266916817",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/digidense-access%40digidense-learning-platform.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
