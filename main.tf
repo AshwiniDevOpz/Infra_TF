@@ -7,6 +7,7 @@ resource "google_container_cluster" "primary" {
 
   remove_default_node_pool = true
   initial_node_count       = 1
+  deletion_protection      = false
 
   network    = var.network
   subnetwork = var.subnetwork
@@ -51,6 +52,11 @@ resource "google_container_cluster" "primary" {
   workload_identity_config {
     workload_pool = "${var.project_id}.svc.id.goog"
   }
+
+  # ✅ Enable Pod Security Policy (legacy setting for some older clusters)
+  #  pod_security_policy_config {
+  #    enabled = true
+  #  }
 }
 
 # -----------------------------
@@ -73,9 +79,13 @@ resource "google_container_node_pool" "primary_nodes" {
       "https://www.googleapis.com/auth/monitoring.write"
     ]
 
-    # ✅ Secure metadata server
+    # ✅ Secure metadata server and conceal metadata
     metadata = {
       disable-legacy-endpoints = "true"
+    }
+
+    workload_metadata_config {
+      mode = "GKE_METADATA"
     }
 
     # ✅ Use least-privilege service account

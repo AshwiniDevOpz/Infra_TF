@@ -34,5 +34,6 @@ variable "subnetwork" {
 
 variable "gke_service_account" {
   type    = string
-  default = "" # Provide a secure SA with minimal GKE access
+  default = "gke-node-sa@digidense-learning-platform.iam.gserviceaccount.com" # Provide a secure SA with minimal GKE access
+
 }
