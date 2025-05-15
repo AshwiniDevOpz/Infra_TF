@@ -7,6 +7,7 @@ resource "google_container_cluster" "primary_cluster" {
 
   network    = "default"
   subnetwork = "default"
+  deletion_protection = false
 
   # ✅ Pod security policy is deprecated. Remove this block.
   # pod_security_policy_config {
@@ -16,7 +17,7 @@ resource "google_container_cluster" "primary_cluster" {
   # ✅ Fix: master_authorized_networks_config uses block type `cidr_blocks`
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = "203.0.113.0/24"
+      cidr_block   = "157.49.199.138/32"
       display_name = "Trusted network"
     }
   }
