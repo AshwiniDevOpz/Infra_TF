@@ -41,12 +41,39 @@ resource "google_container_cluster" "primary_cluster" {
   }
 
   # ✅ Fix: ip_allocation_policy is a block with no arguments directly under it — no `use_ip_aliases`
-  ip_allocation_policy {
-    # use_ip_aliases is implied by presence of this block
-  }
+  ip_allocation_policy {}
 
   resource_labels = {
     environment = "prod"
     team        = "devops"
+  }
+}
+resource "google_container_node_pool" "primary_nodes" {
+  name     = "primary-node-pool"
+  location = var.zones
+  cluster  = google_container_cluster.primary_cluster.name
+
+  node_config {
+    machine_type = "e2-medium"
+
+    # You can set a service account here if you have one:
+    # service_account = var.service_account_email
+
+    metadata = {
+      "disable-legacy-endpoints" = "true"
+    }
+
+    image_type = "COS_CONTAINERD"
+
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform",
+    ]
+  }
+
+  initial_node_count = 2
+
+  management {
+    auto_upgrade = true
+    auto_repair  = true
   }
 }
