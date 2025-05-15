@@ -23,6 +23,6 @@ variable "cluster_names" {
 }
 
 variable "service-account-email" {
-type    = string
-default = "digidense-access@digidense-learning-platform.iam.gserviceaccount.com"
+  type    = string
+  default = "digidense-access@digidense-learning-platform.iam.gserviceaccount.com"
 }
