@@ -23,17 +23,29 @@ variable "cluster_name" {
 }
 
 variable "network" {
-  type    = string
   default = "default"
 }
-
 variable "subnetwork" {
-  type    = string
   default = "default"
 }
-
-variable "gke_service_account" {
-  type    = string
-  default = "gke-node-sa@digidense-learning-platform.iam.gserviceaccount.com" # Provide a secure SA with minimal GKE access
-
+variable "release_channel" {
+  default = "REGULAR"
+}
+variable "node_locations" {
+  type    = list(string)
+  default = []
+}
+variable "node_count" {
+  default = 2
+}
+variable "machine_type" {
+  default = "e2-medium"
+}
+variable "oauth_scopes" {
+  type    = list(string)
+  default = ["https://www.googleapis.com/auth/cloud-platform"]
+}
+variable "service_account_email" {
+  description = "Service account for node pool"
+  default     = "awsdevopsdd@gmail.com"
 }
