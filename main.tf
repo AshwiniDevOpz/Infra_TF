@@ -5,8 +5,8 @@ resource "google_container_cluster" "primary_cluster" {
   remove_default_node_pool = true
   initial_node_count       = 1
 
-  network    = "default"
-  subnetwork = "default"
+  network             = "default"
+  subnetwork          = "default"
   deletion_protection = false
 
   # ✅ Pod security policy is deprecated. Remove this block.
