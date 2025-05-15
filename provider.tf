@@ -15,3 +15,18 @@ provider "google" {
   region      = var.regions
   credentials = "g-key.json"
 }
+
+provider "kubernetes" {
+  config_path = "~/.kube/config" # or use a proper config block to access your cluster
+}
+
+resource "kubernetes_namespace" "default" {
+  metadata {
+    name = "default"
+
+    labels = {
+      "pod-security.kubernetes.io/enforce"         = "baseline"
+      "pod-security.kubernetes.io/enforce-version" = "v1.24"
+    }
+  }
+}
