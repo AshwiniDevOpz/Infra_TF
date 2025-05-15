@@ -2,9 +2,9 @@ name: Terraform Security and CIs
 
 on:
   push:
-    branches: development
+    branches: [development]
   pull_request:
-    branches: development
+    branches: [development]
 
 jobs:
   terraform-code-scan:
@@ -20,6 +20,13 @@ jobs:
         with:
           terraform_version: 1.11.3
 
+      - name: Cache Terraform plugins
+        uses: actions/cache@v3
+        with:
+          path: .terraform
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/*.tf') }}
+          restore-keys: ${{ runner.os }}-terraform-
+
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
@@ -32,99 +39,28 @@ jobs:
         run: tflint --init && tflint
 
       - name: Run tfsec (security scan)
-        uses: aquasecurity/tfsec-action@v1.0.0
+        uses: aquasecurity/tfsec-action@v1.0.1
+        with:
+          args: --fail-on=high,critical
 
       - name: Terraform Init
         run: terraform init
 
-      # - name: Terraform Validate
-      #   run: terraform validate
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
 
       - name: Upload Terraform Files as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: terraform-code
           path: |
-            *.tf
-            *.tfvars
+            **/*.tf
+            **/*.tfvars
 
       - name: Show downloaded files
         run: |
           ls -R    
           pwd
-
-  zip-and-push-artifact:
-    needs: terraform-code-scan
-    runs-on: ubuntu-latest
-    if: success()
-
-    steps:
-      - name: Checkout target repo
-        uses: actions/checkout@v3
-        with:
-          repository: AshwiniDevOpz/Artefact_Storage
-          ref: development
-          token: ${{ secrets.My_GITHUB_TOKEN }}
-          path: Artefact_Storage
-
-      - name: Check for existing latest version hash
-        id: skip-check
-        run: |
-          cd Artefact_Storage
-          latest_file=$(ls terraform-code-v*.zip 2>/dev/null | sort -V | tail -n 1)
-          if [[ -f "$latest_file" ]]; then
-            unzip -p "$latest_file" | sha256sum | cut -d' ' -f1 > ../latest_hash.txt
-          else
-            echo "no_previous_hash" > ../latest_hash.txt
-          fi
-
-      - name: Download Terraform artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: terraform-code
-          path: terraform-code
-
-      - name: Generate current artifact hash
-        run: |
-          cd terraform-code
-          zip -r terraform-temp.zip .
-          unzip -p terraform-temp.zip | sha256sum | cut -d' ' -f1 > ../current_hash.txt
-
-      - name: Check for changes
-        id: hash-diff
-        run: |
-          if cmp -s latest_hash.txt current_hash.txt; then
-            echo "no_change=true" >> $GITHUB_OUTPUT
-          else
-            echo "no_change=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Skip if no changes
-        if: steps.hash-diff.outputs.no_change == 'true'
-        run: echo "No changes in Terraform code — skipping commit and push."
-
-      - name: Determine next version
-        if: steps.hash-diff.outputs.no_change == 'false'
-        id: version
-        run: |
-          cd Artefact_Storage
-          count=$(ls terraform-code-v*.zip 2>/dev/null | wc -l)
-          next_version=$((count + 1))
-          echo "version=v$next_version" >> $GITHUB_OUTPUT
-
-      - name: Rename and move artifact
-        if: steps.hash-diff.outputs.no_change == 'false'
-        run: |
-          VERSION=${{ steps.version.outputs.version }}
-          mv terraform-code/terraform-temp.zip Artefact_Storage/terraform-code-${VERSION}.zip
-
-      - name: Commit and push ZIP to development branch
-        if: steps.hash-diff.outputs.no_change == 'false'
-        run: |
-          cd Artefact_Storage
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add terraform-code-*.zip
-          git commit -m "Add Terraform ZIP version ${{ steps.version.outputs.version }}"
-          git push origin development
-
