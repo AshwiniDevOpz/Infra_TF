@@ -6,9 +6,12 @@ terraform {
       source  = "hashicorp/google"
       version = "6.33.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.20" # Specify the version you want to use
+    }
   }
 }
-
 
 provider "google" {
   project     = var.project_ids
