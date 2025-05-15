@@ -17,8 +17,8 @@ resource "google_container_cluster" "primary_cluster" {
   # ✅ Fix: master_authorized_networks_config uses block type `cidr_blocks`
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = "157.49.199.138/32"
-      display_name = "Trusted network"
+      cidr_block   = "10.0.0.0/8"
+      display_name = "Private Network"
     }
   }
 
@@ -36,7 +36,7 @@ resource "google_container_cluster" "primary_cluster" {
   # ✅ Private cluster config
   private_cluster_config {
     enable_private_nodes    = true
-    enable_private_endpoint = false
+    enable_private_endpoint = true
     master_ipv4_cidr_block  = "172.16.0.0/28"
   }
 
