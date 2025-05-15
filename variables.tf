@@ -22,30 +22,3 @@ variable "cluster_name" {
   default = "my-gke-cluster"
 }
 
-variable "network" {
-  default = "default"
-}
-variable "subnetwork" {
-  default = "default"
-}
-variable "release_channel" {
-  default = "REGULAR"
-}
-variable "node_locations" {
-  type    = list(string)
-  default = []
-}
-variable "node_count" {
-  default = 2
-}
-variable "machine_type" {
-  default = "e2-medium"
-}
-variable "oauth_scopes" {
-  type    = list(string)
-  default = ["https://www.googleapis.com/auth/cloud-platform"]
-}
-variable "service_account_email" {
-  description = "Service account for node pool"
-  default     = "awsdevopsdd@gmail.com"
-}
