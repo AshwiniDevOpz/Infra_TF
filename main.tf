@@ -10,9 +10,9 @@ resource "google_container_cluster" "primary_cluster" {
   deletion_protection = false
 
   # ✅ Pod security policy is deprecated. Remove this block.
-  # pod_security_policy_config {
-  #   enabled = true
-  # }
+  pod_security_policy_config {
+    enabled = false
+  }
 
   # ✅ Fix: master_authorized_networks_config uses block type `cidr_blocks`
   master_authorized_networks_config {
@@ -21,11 +21,6 @@ resource "google_container_cluster" "primary_cluster" {
       display_name = "Private Network"
     }
   }
-
-  # ✅ Remove `metadata` block — it's invalid. Instead, set this under `node_config` in the node pool.
-  # metadata {
-  #   disable_legacy_endpoints = true
-  # }
 
   # ✅ Network policy
   network_policy {
