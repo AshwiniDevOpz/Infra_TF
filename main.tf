@@ -48,32 +48,3 @@ resource "google_container_cluster" "primary_cluster" {
     team        = "devops"
   }
 }
-resource "google_container_node_pool" "primary_nodes" {
-  name     = "primary-node-pool"
-  location = var.zones
-  cluster  = google_container_cluster.primary_cluster.name
-
-  node_config {
-    machine_type = "e2-medium"
-
-    # You can set a service account here if you have one:
-    # service_account = var.service_account_email
-
-    metadata = {
-      "disable-legacy-endpoints" = "true"
-    }
-
-    image_type = "COS_CONTAINERD"
-
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform",
-    ]
-  }
-
-  initial_node_count = 2
-
-  management {
-    auto_upgrade = true
-    auto_repair  = true
-  }
-}
