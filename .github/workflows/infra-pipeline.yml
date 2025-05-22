@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [development]
 
+permissions:
+  contents: read
+  security-events: write  # Needed to upload Snyk results to GitHub Code Scanning
+
 jobs:
   terraform-code-scan:
     runs-on: ubuntu-latest
@@ -38,11 +42,6 @@ jobs:
       - name: Run tflint
         run: tflint --init && tflint
 
-      - name: Run tfsec (security scan)
-        uses: aquasecurity/tfsec-action@v1.0.1
-        with:
-          args: --fail-on=high,critical
-
       - name: Terraform Init
         run: terraform init
 
@@ -51,6 +50,21 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan
+
+      - name: Authenticate Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Snyk to check Terraform for vulnerabilities
+        uses: snyk/actions/iac@v0.6.1
+        with:
+          args: --scan=terraform --sarif-file-output=snyk.sarif
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Upload Snyk SARIF to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
 
       - name: Upload Terraform Files as Artifact
         uses: actions/upload-artifact@v4
